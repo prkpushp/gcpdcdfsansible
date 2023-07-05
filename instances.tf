@@ -8,6 +8,11 @@ resource "google_compute_address" "dc2_public_ip" {
   address_type = "EXTERNAL"
 }
 
+resource "google_compute_address" "ansible_public_ip" {
+  name         = "ansible-public-ip"
+  address_type = "EXTERNAL"
+}
+
 resource "google_compute_instance" "dc1" {
   name         = "dc1"
   machine_type = "n1-standard-1"
@@ -117,5 +122,30 @@ resource "google_compute_instance" "dfs3" {
   metadata_startup_script = <<-EOF
     #!/bin/bash
     # Add your startup script commands here
+  EOF
+}
+
+resource "google_compute_instance" "ansible" {
+  name         = "ansible"
+  machine_type = "n1-standard-1"
+  zone         = "us-central1-a"
+  boot_disk {
+    initialize_params {
+      image = "Debian GNU/Linux 11 (bullseye)"
+    }
+  }
+
+  network_interface {
+    network       = google_compute_network.my_network.id
+    subnetwork    = google_compute_subnetwork.linux_subnet.name
+	access_config {
+      nat_ip = google_compute_address.ansible_public_ip.address
+    }
+  }
+
+  metadata_startup_script = <<-EOF
+    #!/bin/bash
+    apt-get update
+    apt-get install -y ansible
   EOF
 }
