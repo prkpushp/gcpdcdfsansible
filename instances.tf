@@ -131,7 +131,7 @@ resource "google_compute_instance" "ansible" {
   zone         = "us-central1-a"
   boot_disk {
     initialize_params {
-      image = "Debian GNU/Linux 11 (bullseye)"
+      image = "centos-7-v20230711"
     }
   }
 

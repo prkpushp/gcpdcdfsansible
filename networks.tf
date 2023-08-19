@@ -24,8 +24,8 @@ resource "google_compute_subnetwork" "linux_subnet" {
   region        = "us-central1"
 }
 
-resource "google_compute_firewall" "allow_ssh_windows" {
-  name    = "allow-ssh-windows"
+resource "google_compute_firewall" "allow_ssh_ping_windows" {
+  name    = "allow-ssh-ping-windows"
   network = google_compute_network.my_network.name
 
   allow {
@@ -33,16 +33,29 @@ resource "google_compute_firewall" "allow_ssh_windows" {
     ports    = ["3389"]
   }
 
+  allow {
+    protocol = "tcp"
+    ports    = ["5985"]
+  }
+
+    allow {
+    protocol = "icmp"
+  }
+
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_firewall" "allow_ssh_linux" {
-  name    = "allow-ssh-linux"
+resource "google_compute_firewall" "allow_ssh_ping_linux" {
+  name    = "allow-ssh-ping-linux"
   network = google_compute_network.my_network.name
 
   allow {
     protocol = "tcp"
     ports    = ["22"]
+  }
+
+  allow {
+    protocol = "icmp"
   }
 
   source_ranges = ["0.0.0.0/0"]

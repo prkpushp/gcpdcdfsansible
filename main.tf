@@ -1,14 +1,22 @@
 //Create a service account in GCP and prvode acess - I have it as owner for testing
+//ENable APIs Compute and cloudresourcemanager
+
 
 provider "google" {
-  credentials = "c:/svc-gcptf.json"
-  project     = "central-eon-386920"
-  region      = "us-central1"
+  credentials = var.credentialPath
+  project     = var.project
+  region      = var.region
+}
+
+
+resource "google_project_service" "project" {
+  project = var.project
+  service = "storage.googleapis.com"
 }
 
 // Create Bucket
-resource "google_storage_bucket" "central_eon_386920" {
-  name         = "central-eon-386"
+resource "google_storage_bucket" "meta-territory-393217" {
+  name         = "meta-territory-393217"
   location     = "US"
   force_destroy = true
 }
